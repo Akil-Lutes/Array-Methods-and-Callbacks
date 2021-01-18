@@ -45,10 +45,20 @@ Use the higher-order function called getYears to do the following:
 2. Receive a callback function getFinals from task 2 
 3. Return an array called years containing all of the years in the getFinals data set*/
 
-function getYears() {
-    /* code here */
+
+/*getFinalsCB function is used to attach the previous filtered data set so I can get the years from that filtered set. */
+function getYears(getFinalsCB, data) {
+    //created an empty array.
+    let years = []; 
+    getFinalsCB(data).map(object => {
+    years.push(object.Year)     
+    });
+    return years;
 }
 
+// const getYears = (arr, getFinalsCB) => years.push(getFinals.Year)
+
+console.log(getYears(getFinals, fifaData));
 
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 4: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
@@ -58,10 +68,23 @@ Use the higher-order function getWinners to do the following:
 3. Determines the winner (home or away) of each `finals` game. 
 4. Returns the names of all winning countries in an array called `winners` */ 
 
-function getWinners(/* code here */) {
-    /* code here */
-}
+function getWinners(getFinalsCB, data) {
+    //I need to create a variable so when I use if statement, I can reference.
+    //I'll use goals.for each. I need to do that so I can pass in the if statment.
+    const goals = getFinalsCB(data)
+    let winners = [];
+    goals.forEach(data => {
+        if (data['Home Team Goals'] > data['Away Team Goals']) {
+            winners.push(data['Home Team Name']);
+        } else {
+            winners.push(data['Away Team Name']);
+        }
+    })
+    /*I still need to use return statement for the winners empty array bracket. I need to be able to take the data so I can console.log it. */
+    return winners; 
+}  
 
+console.log(getWinners(getFinals, fifaData));
 
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 5: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 
@@ -74,10 +97,18 @@ Use the higher-order function getWinnersByYear to do the following:
 hint: the strings returned need to exactly match the string in step 4.
  */
 
-function getWinnersByYear(/* code here */) {
-    /* code here */
+function getWinnersByYear(getYearsCB, getWinnersCB, data) {
+    let winDate = getWinnersCB(getFinals, data);
+    let winYears = getYearsCB(getFinals, data); 
+    let winnerYear = [];
+    /*I already have the winning teams and the winning years. So now I need to loop through both callback variables to create a template literal then push into new array. */
+      for (let i = 0; i < winDate.length; i++) {
+        winnerYear.push(`In ${winYears[i]}, ${winDate[i]} won the world cup!`)
+    } 
+    return winnerYear;
 }
 
+console.log(getWinnersByYear(getYears, getWinners, fifaData))
 
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 6: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
@@ -90,11 +121,17 @@ Use the higher order function getAverageGoals to do the following:
  Example of invocation: getAverageGoals(getFinals(fifaData));
 */
 
-function getAverageGoals(/* code here */) {
-   /* code here */
+function getAverageGoals(data) {
+    let homeAccumulate = data.reduce((data, goals) => {
+        return data + goals['Home Team Goals']}, 0);  
+    
+    let awayAccumulate = data.reduce((data, goals) => {
+        return data + goals['Away Team Goals']}, 0); 
+
+    return `The average goals for Home is ${homeAccumulate/data.length} and The average goals for Away is ${awayAccumulate/data.length}.`;
 }
 
-
+console.log(getAverageGoals(fifaData));
 
 
 /// 🥅 STRETCH 🥅 ///
